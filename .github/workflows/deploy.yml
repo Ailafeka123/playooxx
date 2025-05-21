@@ -24,8 +24,8 @@ jobs:
       - name: Build  # 執行 npm run build 來編譯
         run: npm run build
 
-      - name: Check next folder
-        run: ls -l ./next
+      - name: Check .next folder
+        run: ls -l ./.next
         
       - name: export
         run: npm run export
