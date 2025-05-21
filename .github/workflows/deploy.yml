@@ -21,12 +21,18 @@ jobs:
       - name: Install dependencies  # 安裝專案的依賴
         run: npm install
 
-      - name: Build  # 執行 npm run build 來編譯 Vue 專案
+      - name: Build  # 執行 npm run build 來編譯
         run: npm run build
 
-      - name: Check dist folder
-        run: ls -l ./dist
+      - name: Check next folder
+        run: ls -l ./next
         
+      - name: export
+        run: npm run export
+      
+      - name: check out folder
+        run: ls -l ./out
+
       - name: Check Git status
         run: git status
 
@@ -34,7 +40,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}  # 使用 GitHub 預設的 Token 來執行操作
-          publish_dir: ./dist  # 要推送的資料夾是 dist
+          publish_dir: ./out  # 要推送的資料夾
           publish_branch: gh-pages
           force_orphan: true
 
