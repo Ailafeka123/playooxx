@@ -27,8 +27,8 @@ jobs:
       - name: Check .next folder
         run: ls -l ./.next
         
-      - name: export
-        run: npm run export
+      # - name: export
+      #   run: npm run export
       
       - name: check out folder
         run: ls -l ./out
