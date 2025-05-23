@@ -2,17 +2,17 @@ import React,{useState,useEffect} from "react";
 import style from '@/style/play1_ooxx/ooxx.module.scss'
 export default function OOXX(){
     //現在是誰的回合 1 = O , 2 = X
-    let [newRound,setNewRound] = useState(1);
+    const [newRound,setNewRound] = useState(1);
     //是否勝利
-    let [win,setWin] = useState([false,0]);
+    const [win,setWin] = useState([false,0]);
     //獲勝條件 需要連幾個
-    let [winNumber, setWinNumber] = useState(4);
+    const [winNumber, setWinNumber] = useState(4);
     //棋盤數量 當前數量
-    let [roundNumber, setRoundNumber] = useState([9,0])
+    const [roundNumber, setRoundNumber] = useState([9,0])
     //設定棋盤大小
-    let [limit, setLimit] = useState(5);
+    const [limit, setLimit] = useState(5);
     // 0 = null , 1 = O , 2 = X
-    let [checkerboard,setCheckerboard] = useState <number[][]> ([ [] ])
+    const [checkerboard,setCheckerboard] = useState <number[][]> ([ [] ])
     //初始化棋盤 後續可能可以進行4X4系列
     const reStart = () =>{
         //棋盤大小
