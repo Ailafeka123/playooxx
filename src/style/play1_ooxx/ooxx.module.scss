@@ -1,0 +1,85 @@
+
+.game{
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    gap: 1rem;
+    @media(min-width:768px){
+        flex-direction: row;
+    }
+    .gameBox{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        gap: 1rem;
+        --width:300px;
+        --hight:300px;
+        @media(min-width:768px){
+            width: 50%;
+            --width:400px;
+            --hight:400px;
+        }
+        .winnerDiv{
+            color:red;
+        }
+        .checkerBoardDiv{
+            --limit:3;
+            display: grid;
+            grid-template-columns: repeat(var(--limit),1fr);
+            grid-template-rows: repeat(var(--limit),1fr);
+            max-width: 100%;
+            width: var(--width);
+            height:var(--hight);
+            .checkerBoard{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border: 2px solid black;
+                font-size: calc(150px / var(--limit));
+            }
+        }
+        .reStartButton{
+            width: var(--width);
+            height: 40px;
+            border-radius: 8px;
+            max-width: 100%;
+        }
+    }
+    .gameDirections{
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+        gap: 1rem;
+        @media(min-width:768px){
+            width: 50%;
+        }
+        h2{
+            width: 100%;
+        }
+        p{
+            width: 100%;
+        }
+        div{
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+            label{
+                width: 50%;
+            }
+            select{
+                width: 30%;
+                padding:0 1rem;
+                border-radius: 8px;
+            }
+        }
+    }
+}
