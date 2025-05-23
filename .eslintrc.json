@@ -1,7 +1,0 @@
-{
-  "extends": "next",
-  "rules": {
-    "prefer-const": "warn",
-    "react-hooks/exhaustive-deps": "warn"
-  }
-}
