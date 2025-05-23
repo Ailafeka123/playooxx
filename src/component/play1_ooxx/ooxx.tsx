@@ -24,7 +24,6 @@ export default function OOXX(){
         setNewRound(1);
         //重製對決結果
         setWin([false,0]);
-        //抓取棋盤格子class
     }
     // 初始化 進行棋盤初始化
     useEffect(()=>{
