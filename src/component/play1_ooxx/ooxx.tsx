@@ -16,7 +16,7 @@ export default function OOXX(){
     //初始化棋盤 後續可能可以進行4X4系列
     const reStart = () =>{
         //棋盤大小
-        let arrayList = Array.from({length:limit},()=> Array(limit).fill(0));
+        const arrayList = Array.from({length:limit},()=> Array(limit).fill(0));
         setCheckerboard(arrayList);
         //棋盤最大數量
         setRoundNumber([limit*limit,0])
@@ -31,7 +31,7 @@ export default function OOXX(){
     },[])
     //建立棋盤當前結果
     const CheckerboardShow = () =>{
-        let pushDiv = [];
+        const pushDiv = [];
         let key = 0;
         for(let i = 0 ; i < checkerboard.length; i++){
             for(let row = 0 ; row < checkerboard[0].length ; row++){
@@ -42,7 +42,7 @@ export default function OOXX(){
                     index = "X"
                 }
                 pushDiv.push(<div key={key} className={style.checkerBoard} data-value={checkerboard[i][row]} onClick={(e)=>{
-                    let value = e.currentTarget.dataset.value;
+                    const value = e.currentTarget.dataset.value;
                     if(value === "0" && win[0] === false){
                         ClickDiv(i,row)
                     }
@@ -198,13 +198,13 @@ export default function OOXX(){
 
     //勝利所需的選擇器
     const WinNumberSelect = () =>{
-        let option = [];
+        const option = [];
         for(let i = 3 ; i <= limit ;i++){
             option.push(<option key={i} value={i}>{i}</option>)
         }
         return (
             <select defaultValue={winNumber} onChange={(e)=>{
-                let number = parseInt(e.target.value)
+                const number = parseInt(e.target.value)
                 setWinNumber(number)
             }}>
                 {option}
@@ -231,7 +231,7 @@ export default function OOXX(){
                 <div>
                     <label>當前棋盤大小:{limit}x{limit}</label>
                     <select defaultValue={limit} onChange={(e)=>{
-                        let number = parseInt(e.target.value);
+                        const number = parseInt(e.target.value);
                         setLimit(number);
                         if(number < winNumber){
                             setWinNumber(number);
