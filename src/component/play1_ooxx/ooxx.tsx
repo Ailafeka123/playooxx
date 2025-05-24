@@ -141,17 +141,18 @@ export default function OOXX(){
         }else if(times > 1){
             for(let cell = 0 ; cell < checkerboard[col].length ; cell++){
                 if(checkerboard[col][cell] === 0){
-                    computerArray[col][cell] += times*2;
+                    computerArray[col][cell] += times*3;
                 }
             }
         }
         times = 1;
         linkCheck = true;
         //col確認 向上 向下
-        for(let cell = col-1 ;cell >= 0 ; cell--){
+        for(let cell = col-1 ; cell >= 0 ; cell--){
             if(linkCheck){
                 if(checkerboard[cell][row] === Round){
                     times++;
+                    continue;
                 }else{
                     linkCheck = false;
                     if(Round === 2){
@@ -198,7 +199,7 @@ export default function OOXX(){
         }else if(times > 1){
             for(let cell = 0 ; cell < checkerboard.length ; cell++){
                 if(checkerboard[cell][row] === 0){
-                    computerArray[cell][row] += times*2;
+                    computerArray[cell][row] += times*3;
                 }
             }
         }
@@ -270,7 +271,7 @@ export default function OOXX(){
             cellRow = row-1;
             while(cellCol >= 0 && cellRow >= 0){
                 if(checkerboard[cellCol][cellRow] === 0){
-                    computerArray[cellCol][cellRow] +=times * 2;
+                    computerArray[cellCol][cellRow] +=times * 3;
                 }
                 cellCol --;
                 cellRow --;
@@ -279,7 +280,7 @@ export default function OOXX(){
             cellRow = row+1;
             while(cellCol < limit && cellRow < limit){
                 if(checkerboard[cellCol][cellRow] === 0){
-                    computerArray[cellCol][cellRow] +=times * 2;
+                    computerArray[cellCol][cellRow] +=times * 3;
                 }
                 cellCol++;
                 cellRow++;
@@ -353,7 +354,7 @@ export default function OOXX(){
             cellRow = row +1;
             while(cellCol >= 0 && cellRow < limit){
                 if(checkerboard[cellCol][cellRow] === 0){
-                    computerArray[cellCol][cellRow] += times*2;
+                    computerArray[cellCol][cellRow] += times*3;
                 }
                 cellCol--;
                 cellRow++
@@ -362,7 +363,7 @@ export default function OOXX(){
             cellRow = row -1;
             while(cellCol < limit && cellRow >= 0){
                 if(checkerboard[cellCol][cellRow] === 0){
-                    computerArray[cellCol][cellRow] += times*2;
+                    computerArray[cellCol][cellRow] += times*3;
                 }
                 cellCol++;
                 cellRow--;
@@ -437,10 +438,7 @@ export default function OOXX(){
                     }
                 }
                 // console.log(computer)
-                // 加點時間 避免偶爾太快點擊導致勝利判斷錯誤。
-                setTimeout(()=>{
-                    ClickDiv(ArrayList[number][0],ArrayList[number][1])
-                },1)
+                ClickDiv(ArrayList[number][0],ArrayList[number][1])
             }
         }
     },[newRound])
