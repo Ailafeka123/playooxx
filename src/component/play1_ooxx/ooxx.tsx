@@ -437,7 +437,10 @@ export default function OOXX(){
                     }
                 }
                 // console.log(computer)
-                ClickDiv(ArrayList[number][0],ArrayList[number][1])
+                // 加點時間 避免偶爾太快點擊導致勝利判斷錯誤。
+                setTimeout(()=>{
+                    ClickDiv(ArrayList[number][0],ArrayList[number][1])
+                },1)
             }
         }
     },[newRound])
