@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from "react";
 import style from '@/style/play1_ooxx/ooxx.module.scss'
-import { link } from "fs";
 export default function OOXX(){
     //現在是誰的回合 1 = O , 2 = X
     const [newRound,setNewRound] = useState(1);
