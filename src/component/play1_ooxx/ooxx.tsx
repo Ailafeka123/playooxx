@@ -1,5 +1,6 @@
 import React,{useState,useEffect} from "react";
 import style from '@/style/play1_ooxx/ooxx.module.scss'
+import { link } from "fs";
 export default function OOXX(){
     //現在是誰的回合 1 = O , 2 = X
     const [newRound,setNewRound] = useState(1);
@@ -13,11 +14,17 @@ export default function OOXX(){
     const [limit, setLimit] = useState(5);
     // 0 = null , 1 = O , 2 = X
     const [checkerboard,setCheckerboard] = useState <number[][]> ([ [] ])
+    //當前模式 false = 雙人模式 true = 電腦模式
+    const [gameMod, setGameMode] = useState(false);
+    //判斷盤面下棋位置 強化電腦判斷
+    const [computer,setComputer] = useState<number[][]> ( [ [] ] )
     //初始化棋盤 後續可能可以進行4X4系列
     const reStart = () =>{
         //棋盤大小
         const arrayList = Array.from({length:limit},()=> Array(limit).fill(0));
         setCheckerboard(arrayList);
+        const arrayList2 = Array.from({length:limit},()=> Array(limit).fill(0));
+        setComputer(arrayList2)
         //棋盤最大數量
         setRoundNumber([limit*limit,0])
         //O先手
@@ -44,6 +51,9 @@ export default function OOXX(){
                 pushDiv.push(<div key={key} className={style.checkerBoard} data-value={checkerboard[i][row]} onClick={(e)=>{
                     const value = e.currentTarget.dataset.value;
                     if(value === "0" && win[0] === false){
+                        if(gameMod && newRound === 2){
+                            return;
+                        }
                         ClickDiv(i,row)
                     }
                 }}>{index}</div>)
@@ -56,7 +66,7 @@ export default function OOXX(){
             </div>
         );
     }
-    //更新棋盤
+    //下棋後更新棋盤與判斷
     const ClickDiv = (i:number,j:number) =>{
         setCheckerboard(index=>(
             index.map((row,key)=>(
@@ -69,72 +79,186 @@ export default function OOXX(){
         checkwin(i,j,newRound);
         //換手
         setNewRound(newRound===1? 2 : 1)
+        //計算下棋數量
         setRoundNumber(index=>{
             return ([index[0],index[1]+1])
         })
     }
-    //確認是否獲勝
+    //確認是否獲勝 以及電腦判斷
     const checkwin = (col:number,row:number,Round:number)=>{
+        //更新電腦判斷
+        let computerArray = computer.map(index=>[...index])
         //row確認 向左 向右
         let times = 1;
+        let linkCheck = true;
         for(let cell = row-1; cell >= 0 ; cell--){
-            if(checkerboard[col][cell] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[col][cell] === Round){
+                    times++;
+                    continue;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[col][cell] === 2){
                 break;
+            }else if(checkerboard[col][cell] === 1){
+                if(checkerboard[col][cell+1] === 0){
+                    computerArray[col][cell+1] += 5;
+                }
+            }else{
+                computerArray[col][cell] += 1;
             }
         }
+        linkCheck = true;
         for(let cell = row+1 ; cell < checkerboard[col].length; cell++){
-            if(checkerboard[col][cell] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[col][cell] === Round){
+                    times++;
+                    continue;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[col][cell] === 2){
                 break;
+            }else if(checkerboard[col][cell] === 1){
+                if(checkerboard[col][cell-1] === 0){
+                    computerArray[col][cell-1] += 5; 
+                }
+            }else{
+                computerArray[col][cell] += 1;
             }
         }
         if(times >= winNumber){
             setWin([true,Round])
             return;
+        }else if(times > 1){
+            for(let cell = 0 ; cell < checkerboard[col].length ; cell++){
+                if(checkerboard[col][cell] === 0){
+                    computerArray[col][cell] += times*2;
+                }
+            }
         }
         times = 1;
+        linkCheck = true;
         //col確認 向上 向下
         for(let cell = col-1 ;cell >= 0 ; cell--){
-            if(checkerboard[cell][row] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[cell][row] === Round){
+                    times++;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[cell][row] === 2){
                 break;
+            }else if(checkerboard[cell][row] === 1){
+                if(checkerboard[cell+1][row] === 0){
+                    computerArray[cell+1][row] += 5;
+                }
+            }else{
+                computerArray[cell][row]++;
             }
         }
+        linkCheck =true;
         for(let cell = col +1 ; cell < checkerboard.length ; cell++){
-            if(checkerboard[cell][row] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[cell][row] ===Round){
+                    times++;
+                    continue;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[cell][row] === 2){
                 break;
+            }else if(checkerboard[cell][row] === 1){
+                if(checkerboard[cell-1][row] === 0){
+                    computerArray[cell-1][row] += 5
+                }
+            }else{
+                computerArray[cell][row] += 1;
             }
         }
         if(times >= winNumber){
             setWin([true,Round])
             return;
+        }else if(times > 1){
+            for(let cell = 0 ; cell < checkerboard.length ; cell++){
+                if(checkerboard[cell][row] === 0){
+                    computerArray[cell][row] += times*2;
+                }
+            }
         }
         times = 1;
+        linkCheck = true;
         //斜向 左上 右下
         let cellCol = col-1;
         let cellRow = row-1;
         while(cellCol >= 0 && cellRow >= 0){
-            if(checkerboard[cellCol][cellRow] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[cellCol][cellRow] === Round){
+                    times++;
+                    cellCol--;
+                    cellRow--;
+                    continue;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[cellCol][cellRow] === 2){
                 break;
+            }else if(checkerboard[cellCol][cellRow] === 1){
+                if(checkerboard[cellCol+1][cellRow+1] === 0){
+                    computerArray[cellCol+1][cellRow+1] += 5;
+                }
+            }else{
+                computerArray[cellCol][cellRow] += 2;
             }
             cellCol--;
             cellRow--;
         }
         cellCol = col+1;
         cellRow = row+1;
+        linkCheck = true;
         while(cellCol < checkerboard.length && cellRow < checkerboard[col].length){
-            if(checkerboard[cellCol][cellRow] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[cellCol][cellRow] === Round){
+                    times++;
+                    cellCol++;
+                    cellRow++;
+                    continue;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[cellCol][cellRow] === 2){
                 break;
+            }else if(checkerboard[cellCol][cellRow] === 1){
+                if(checkerboard[cellCol-1][cellRow-1] === 0){
+                    computerArray[cellCol-1][cellRow-1] += 5;
+                }
+            }else{
+                computerArray[cellCol][cellRow] += 2
             }
             cellCol++;
             cellRow++;
@@ -142,28 +266,82 @@ export default function OOXX(){
         if(times >= winNumber){
             setWin([true,Round])
             return;
+        }else if(times > 1){
+            cellCol = col-1;
+            cellRow = row-1;
+            while(cellCol >= 0 && cellRow >= 0){
+                if(checkerboard[cellCol][cellRow] === 0){
+                    computerArray[cellCol][cellRow] +=times * 2;
+                }
+                cellCol --;
+                cellRow --;
+            }
+            cellCol = col+1;
+            cellRow = row+1;
+            while(cellCol < limit && cellRow < limit){
+                if(checkerboard[cellCol][cellRow] === 0){
+                    computerArray[cellCol][cellRow] +=times * 2;
+                }
+                cellCol++;
+                cellRow++;
+            }
         }
         times = 1;
-
+        linkCheck = true;
         //斜向 右上 左下
         cellCol = col-1;
         cellRow = row+1;
         while(cellCol >= 0 && cellRow < checkerboard[row].length){
-            if(checkerboard[cellCol][cellRow] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[cellCol][cellRow] === Round){
+                    times++;
+                    cellCol--;
+                    cellRow++;
+                    continue;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[cellCol][cellRow] === 2){
                 break;
+            }else if(checkerboard[cellCol][cellRow] === 1){
+                if(checkerboard[cellCol+1][cellRow-1] === 0){
+                    computerArray[cellCol+1][cellRow-1] += 5
+                }
+            }else{
+                computerArray[cellCol][cellRow] +=2
             }
             cellCol--;
             cellRow++;
         }
         cellCol = col+1;
         cellRow = row-1;
+        linkCheck = true;
         while(cellCol < checkerboard.length && cellRow >= 0){
-            if(checkerboard[cellCol][cellRow] === Round){
-                times++;
-            }else{
+            if(linkCheck){
+                if(checkerboard[cellCol][cellRow] === Round){
+                    times++;
+                    cellCol++;
+                    cellRow--;
+                    continue;
+                }else{
+                    linkCheck = false;
+                    if(Round === 2){
+                        break;
+                    }
+                }
+            }
+            if(checkerboard[cellCol][cellRow] === 2){
                 break;
+            }else if(checkerboard[cellCol][cellRow] === 1){
+                if(checkerboard[cellCol-1][cellRow+1] === 0){
+                    computerArray[cellCol-1][cellRow+1] += 5;
+                }
+            }else{
+                computerArray[cellCol][cellRow] += 2
             }
             cellCol++;
             cellRow--;
@@ -171,7 +349,30 @@ export default function OOXX(){
         if(times >= winNumber){
             setWin([true,Round])
             return;
+        }else if (times > 1){
+            cellCol = col -1;
+            cellRow = row +1;
+            while(cellCol >= 0 && cellRow < limit){
+                if(checkerboard[cellCol][cellRow] === 0){
+                    computerArray[cellCol][cellRow] += times*2;
+                }
+                cellCol--;
+                cellRow++
+            }
+            cellCol = col +1;
+            cellRow = row -1;
+            while(cellCol < limit && cellRow >= 0){
+                if(checkerboard[cellCol][cellRow] === 0){
+                    computerArray[cellCol][cellRow] += times*2;
+                }
+                cellCol++;
+                cellRow--;
+            }
         }
+        //將下棋點移除
+        computerArray[col][row] = 0;
+
+        setComputer(computerArray);
 
     }
 
@@ -191,10 +392,10 @@ export default function OOXX(){
             }
         }
     }
-    //改變棋盤
+    //改變模式 重製棋盤
     useEffect(()=>{
         reStart();
-    },[limit,winNumber])
+    },[limit,winNumber,gameMod])
 
     //勝利所需的選擇器
     const WinNumberSelect = () =>{
@@ -211,7 +412,41 @@ export default function OOXX(){
             </select>
         )
     }
-    //改變勝利所需連線數
+
+    //感應切換回合 電腦模式將自動下X 
+    useEffect(()=>{
+        if(gameMod && newRound === 2){
+            let max = 0;
+            let ArrayList:[number,number][] = [];
+            computer.forEach((index,colKey)=>{
+                index.forEach((value,rowKey)=>{
+                    if (value > max){
+                        max = value;
+                        ArrayList = [[colKey,rowKey]];
+                    }else if( value === max){
+                        ArrayList.push([colKey,rowKey]);
+                    }
+                })
+            })
+            if(roundNumber[0] !== roundNumber[1] && win[0] === false){
+                let number = 0;
+                if(ArrayList.length > 1){
+                    number = Math.floor(Math.random() * ArrayList.length) ;
+                    // 防止錯誤
+                    if(number >= ArrayList.length){
+                        number = ArrayList.length -1;
+                    }
+                }
+                // console.log(computer)
+                ClickDiv(ArrayList[number][0],ArrayList[number][1])
+            }
+        }
+    },[newRound])
+
+    // 確認電腦判斷陣列
+    // useEffect(()=>{
+    //     console.log(computer)
+    // },[gameMod,computer])
 
     return(
         <div className={style.game}>
@@ -247,6 +482,20 @@ export default function OOXX(){
                 <div>
                     <label>勝利條件:連接{winNumber}個</label>
                     <WinNumberSelect/>
+                </div>
+                <div>
+                    <label>是否開啟電腦模式</label>
+                    <select defaultValue={gameMod === true? "true":"false"} onChange={(e)=>{
+                        const index = e.target.value;
+                        if(index === "true"){
+                            setGameMode(true)
+                        }else{
+                            setGameMode(false)
+                        }
+                    }}>
+                        <option value="true">開啟</option>
+                        <option value="false">關閉</option>
+                    </select>
                 </div>
             </div>
         </div>
