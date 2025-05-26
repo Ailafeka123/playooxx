@@ -86,7 +86,7 @@ export default function OOXX(){
     //確認是否獲勝 以及電腦判斷
     const checkwin = (col:number,row:number,Round:number)=>{
         //更新電腦判斷
-        let computerArray = computer.map(index=>[...index])
+        const computerArray = computer.map(index=>[...index])
         //row確認 向左 向右
         let times = 1;
         let linkCheck = true;
@@ -404,7 +404,8 @@ export default function OOXX(){
             option.push(<option key={i} value={i}>{i}</option>)
         }
         return (
-            <select defaultValue={winNumber} onChange={(e)=>{
+            <select defaultValue={winNumber} className="bg-sky-300"
+            onChange={(e)=>{
                 const number = parseInt(e.target.value)
                 setWinNumber(number)
             }}>
@@ -454,7 +455,7 @@ export default function OOXX(){
                 
                 <NowResult/>
                 <CheckerboardShow/>
-                <button onClick={()=>{reStart()}} className={style.reStartButton}>重新開始</button>
+                <button onClick={()=>{reStart()}} className={`${style.reStartButton} bg-sky-300 hover:bg-sky-500 hover:not-focus:bg-sky-400`}>重新開始</button>
             </div>
             <div className={style.gameDirections}>
                 <h1>井字遊戲</h1>
@@ -465,13 +466,15 @@ export default function OOXX(){
                 <h2>可進行設定:</h2>
                 <div>
                     <label>當前棋盤大小:{limit}x{limit}</label>
-                    <select defaultValue={limit} onChange={(e)=>{
+                    <select defaultValue={limit} className="bg-sky-300"
+                    onChange={(e)=>{
                         const number = parseInt(e.target.value);
                         setLimit(number);
                         if(number < winNumber){
                             setWinNumber(number);
                         }
-                    }}>
+                    }}
+                    >
                         <option value={3}>3</option>
                         <option value={4}>4</option>
                         <option value={5}>5</option>
@@ -485,7 +488,8 @@ export default function OOXX(){
                 </div>
                 <div>
                     <label>是否開啟電腦模式</label>
-                    <select defaultValue={gameMod === true? "true":"false"} onChange={(e)=>{
+                    <select defaultValue={gameMod === true? "true":"false"} className="bg-sky-300"
+                    onChange={(e)=>{
                         const index = e.target.value;
                         if(index === "true"){
                             setGameMode(true)

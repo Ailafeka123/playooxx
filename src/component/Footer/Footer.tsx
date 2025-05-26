@@ -2,7 +2,7 @@ import style from '@/style/footer/footer.module.scss'
 
 export default function Footer (){
     return(
-        <footer className={style.footerDiv}>
+        <footer className={`${style.footerDiv} `}>
             <div>
                 <p className="">聯繫方法</p>
                 <p className="">電話號碼:0917-871-819</p>
