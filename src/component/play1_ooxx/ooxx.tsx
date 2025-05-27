@@ -457,7 +457,7 @@ export default function OOXX(){
                 <CheckerboardShow/>
                 <button onClick={()=>{reStart()}} className={`${style.reStartButton} bg-sky-300 hover:bg-sky-500 hover:not-focus:bg-sky-400`}>重新開始</button>
             </div>
-            <div className={style.gameDirections}>
+            <article className={style.gameDirections}>
                 <h1>井字遊戲</h1>
                 <h2>遊戲說明:</h2>
                 <p>輪流在棋格中畫O或X</p>
@@ -501,7 +501,7 @@ export default function OOXX(){
                         <option value="false">關閉</option>
                     </select>
                 </div>
-            </div>
+            </article>
         </div>
     )
 }

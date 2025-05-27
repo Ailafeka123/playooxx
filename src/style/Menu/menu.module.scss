@@ -1,0 +1,91 @@
+.header{
+    position: fixed;
+    z-index: 99;
+    width: 100%;
+    min-height: var(--header-nav-height);
+    left: 0;
+    top: 0;
+    .menuNav{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        @media(min-width:768px){
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        .menuButtonDiv{
+            --menuButton-height: calc(var(--header-nav-height) - 10px);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: var(--header-nav-height);
+            @media(min-width:768px){
+                display: none;
+            }
+            .menuButton1{
+                position: absolute;
+                border-bottom: 2px solid black;
+                width: var(--menuButton-height);
+                height:var(--menuButton-height);
+            }
+            .menuButton2{
+                position: absolute;
+                border-top: 2px solid black;
+                width: var(--menuButton-height);
+                height: var(--menuButton-height);
+            }
+            .menuButton3{
+                position: absolute;
+                border-bottom: 2px solid black;
+                width: var(--menuButton-height);
+                height: var(--menuButton-height);
+                transform: translateY(-50%);
+            }
+        }
+        
+        .navLinkDiv{
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: space-around;
+            @media(min-width: 768px){
+                display: flex;
+                height: var(--header-nav-height);
+            }
+            .iconDiv{
+                width: 50%;
+                height: var(--header-nav-height);
+                display: none;
+                align-items: center;
+                justify-content: start;
+                padding: 0 0 0 1rem;
+                @media(min-width:768px){
+                    display: flex;
+                }
+                .navIcon{
+                    width: 40px;
+                    height: 40px;
+                    object-position: center;
+                    object-fit:cover;
+                }
+            }
+            ul{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                @media(min-width:768px){
+                    justify-content: end;
+                    padding: 0 1rem 0 0;
+                }
+            }
+        }
+    }
+}
