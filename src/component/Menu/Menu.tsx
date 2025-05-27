@@ -1,11 +1,8 @@
-import React,{useState,useEffect} from "react";
+import React,{useState} from "react";
 import style from '@/style/Menu/menu.module.scss'
 import Image from "next/image";
 export default function Menu(){
     const [navCollapse,setNavCollapse] = useState(false);
-    useEffect(()=>{
-        console.log(navCollapse)
-    },[navCollapse])
     return(
         <header className={`${style.header} bg-sky-300`} >
             <nav className={style.menuNav}>
@@ -16,7 +13,7 @@ export default function Menu(){
                 </div>
                 <div className={`${style.navLinkDiv} ${navCollapse?`flex`:`hidden`}`}>
                     <div className={`${style.iconDiv}`}>
-                        <img src="/selficon3.svg" alt="icon" className={`${style.navIcon}`} />
+                        <Image src="/selficon3.svg" alt="icon" className={`${style.navIcon}`} width={40} height={40}/>
                     </div>
                     <ul className={` `}>
                         <li>井字遊戲</li>
