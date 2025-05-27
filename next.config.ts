@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   assetPrefix: isProd? '/playooxx':'',
   publicRuntimeConfig:{
     basePath:isProd? '/playooxx':''
+  },
+  images:{
+    unoptimized:true,
   }
 
 };
