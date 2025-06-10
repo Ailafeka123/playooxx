@@ -4,17 +4,21 @@ export default function SnakeGame(){
     //地圖 24*24
     //x and Y 對應 [x][y]
     const [gameMap,setGameMap] = useState <Boolean[][]> ( () => Array.from({length:24},()=>(Array(24).fill(false))));
+    //蛇頭
+    const [snakeHead,setSnakeHead] = useState([]);
     //初始化與放置地圖
     useEffect(()=>{
         GameMapReSet();
     },[gameMap])
-
+    useEffect(()=>{
+        
+    },[snakeHead])
     //return 地圖
     const GameMapReSet = () =>{
-        let gameMapDiv :React.ReactElement[] = [];
+        const gameMapDiv :React.ReactElement[] = [];
         let time = 0;
         for(let col = 0 ; col < gameMap.length; col++){
-            let gameMapCol :React.ReactElement[] = [];
+            const gameMapCol :React.ReactElement[] = [];
             for(let row = 0 ; row < gameMap[col].length; row++){
                 gameMapCol.push(<div key={time} data-x={col} data-y={row} className={style.GameMapCell}></div>);
                 time++;
@@ -23,8 +27,7 @@ export default function SnakeGame(){
         }
         return <div className={style.GameMap}>{gameMapDiv}</div>;
     }
-    //蛇頭
-    const [snakeHead,setSnakeHead] = useState([]);
+
     return(
         <>
             <GameMapReSet></GameMapReSet>
