@@ -1,4 +1,5 @@
 import React,{useState} from "react";
+import Link from "next/link";
 import style from '@/style/Menu/menu.module.scss'
 import Image from "next/image";
 export default function Menu(){
@@ -16,7 +17,8 @@ export default function Menu(){
                         <Image src="/selficon3.svg" alt="icon" className={`${style.navIcon}`} width={40} height={40}/>
                     </div>
                     <ul className={` `}>
-                        <li>井字遊戲</li>
+                        <li><Link href={'/Snake'}>貪吃蛇</Link></li>
+                        <li><Link href={'/'}>井字遊戲</Link></li>
                     </ul>
                 </div>
             </nav>

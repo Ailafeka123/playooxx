@@ -1,0 +1,28 @@
+.GameMap{
+    --boxWidth : 300px;
+    --boxheight : 300px;
+    width: var(--boxWidth);
+    height: var(--boxheight);
+    @media(min-width:450px){
+        --boxWidth : 400px;
+        --boxheight : 400px;
+    }
+    @media(min-width:768px){
+        --boxWidth : 700px;
+        --boxheight : 700px;
+    }
+    .GameMapCol{
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        height: calc( var(--boxheight) / 24);
+        align-items: center;
+        justify-content: center;
+        .GameMapCell{
+            display: flex;
+            width: calc(var(--boxWidth) / 24);
+            height: 100%;
+            border: 1px black solid;
+        }
+    }
+}
