@@ -1,7 +1,6 @@
 import React,{useState} from "react";
 import Link from "next/link";
 import style from '@/style/Menu/menu.module.scss'
-import Image from "next/image";
 export default function Menu(){
     const [navCollapse,setNavCollapse] = useState(false);
     return(
@@ -14,7 +13,7 @@ export default function Menu(){
                 </div>
                 <div className={`${style.navLinkDiv} ${navCollapse?`flex`:`hidden`}`}>
                     <div className={`${style.iconDiv}`}>
-                        <Image src="/selficon3.svg" alt="icon" className={`${style.navIcon}`} width={40} height={40}/>
+                        <img  src="/selficon3.svg" alt="icon" className={`${style.navIcon}`} width={40} height={40}/>
                     </div>
                     <ul className={` `}>
                         <li><Link href={'/Snake'}>貪吃蛇</Link></li>
