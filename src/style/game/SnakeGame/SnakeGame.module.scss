@@ -1,28 +1,55 @@
-.GameMap{
-    --boxWidth : 300px;
-    --boxheight : 300px;
-    width: var(--boxWidth);
-    height: var(--boxheight);
-    @media(min-width:450px){
-        --boxWidth : 400px;
-        --boxheight : 400px;
-    }
-    @media(min-width:768px){
-        --boxWidth : 700px;
-        --boxheight : 700px;
-    }
-    .GameMapCol{
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        height: calc( var(--boxheight) / 24);
-        align-items: center;
-        justify-content: center;
-        .GameMapCell{
+.game{
+    position: relative;
+    .GameMap{
+        --boxWidth : 300px;
+        --boxheight : 300px;
+        width: var(--boxWidth);
+        height: var(--boxheight);
+        @media(min-width:450px){
+            --boxWidth : 400px;
+            --boxheight : 400px;
+        }
+        @media(min-width:768px){
+            --boxWidth : 700px;
+            --boxheight : 700px;
+        }
+        .GameMapCol{
             display: flex;
-            width: calc(var(--boxWidth) / 24);
-            height: 100%;
-            border: 1px black solid;
+            flex-direction: row;
+            width: 100%;
+            height: calc( var(--boxheight) / 24);
+            align-items: center;
+            justify-content: center;
+            .GameMapCell{
+                display: flex;
+                width: calc(var(--boxWidth) / 24);
+                height: 100%;
+                border: 1px black solid;
+                &.snakeHeader{
+                    background-color: #4bbe07;
+                }
+                &.snakeBody{
+                    background-color: #7af83f;
+                }
+                &.food{
+                    background-color: #16e7ee;
+                }
+            }
+           
         }
     }
+    .gameStartButton{
+        position: absolute;
+        display: flex;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        font-size: 2rem;
+        border-radius: 10px;
+        padding: 2rem 2rem;
+        &.gameActive{
+            display: none;
+        }
+    }
+
 }
