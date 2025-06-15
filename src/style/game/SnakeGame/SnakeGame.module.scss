@@ -1,55 +1,114 @@
 .game{
     position: relative;
-    .GameMap{
-        --boxWidth : 300px;
-        --boxheight : 300px;
-        width: var(--boxWidth);
-        height: var(--boxheight);
-        @media(min-width:450px){
-            --boxWidth : 400px;
-            --boxheight : 400px;
-        }
-        @media(min-width:768px){
-            --boxWidth : 700px;
-            --boxheight : 700px;
-        }
-        .GameMapCol{
+    .gameMenu{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-around;
+        width: 300px;
+        height: 100px;
+        border-radius: 16px 16px 0 0 ;
+        background-color: rgb(238, 238, 238);
+        border: 1px solid black;
+        div{
+            width: 50%;
             display: flex;
-            flex-direction: row;
-            width: 100%;
-            height: calc( var(--boxheight) / 24);
             align-items: center;
             justify-content: center;
-            .GameMapCell{
-                display: flex;
-                width: calc(var(--boxWidth) / 24);
-                height: 100%;
-                border: 1px black solid;
-                &.snakeHeader{
-                    background-color: #4bbe07;
-                }
-                &.snakeBody{
-                    background-color: #7af83f;
-                }
-                &.food{
-                    background-color: #16e7ee;
-                }
+        }
+        @media(min-width:450px){
+            width: 400px;
+
+        }
+        @media(min-width:768px){
+            width: 700px;
+        }
+    }
+    .GameMapDiv{
+        position: relative;
+        .GameMap{
+            --boxWidth : 300px;
+            --boxheight : 300px;
+            width: var(--boxWidth);
+            height: var(--boxheight);
+            @media(min-width:450px){
+                --boxWidth : 400px;
+                --boxheight : 400px;
             }
-           
+            @media(min-width:768px){
+                --boxWidth : 700px;
+                --boxheight : 700px;
+            }
+            .GameMapCol{
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                height: calc( var(--boxheight) / 24);
+                align-items: center;
+                justify-content: center;
+                .GameMapCell{
+                    display: flex;
+                    width: calc(var(--boxWidth) / 24);
+                    height: 100%;
+                    border: 1px black solid;
+                    &.snakeHeader{
+                        background-color: #4bbe07;
+                    }
+                    &.snakeBody{
+                        background-color: #7af83f;
+                    }
+                    &.food{
+                        background-color: #16e7ee;
+                    }
+                }
+            
+            }
         }
-    }
-    .gameStartButton{
-        position: absolute;
-        display: flex;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%,-50%);
-        font-size: 2rem;
-        border-radius: 10px;
-        padding: 2rem 2rem;
-        &.gameActive{
-            display: none;
+        .gameStartButton{
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid black;
+            width: 90%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            font-size: 2rem;
+            border-radius: 10px;
+            padding: 2rem 2rem;
+            &.gameActive{
+                display: none;
+            }
         }
+        .gameOverDiv{
+            position: absolute;
+            width: 90%;
+            height: 45vh;
+            background-color: #fff;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            border-radius: 16px;
+            border: 1px solid black;
+            z-index: 1  ;
+            button{
+                font-size: 2rem;
+                border-radius: 10px;
+                padding:2rem;
+
+            }
+            &.gameOverClose{
+                display: none;
+            }
+        }
+
     }
+    
 
 }

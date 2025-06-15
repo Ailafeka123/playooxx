@@ -1,6 +1,5 @@
 import React,{useState,useEffect,useRef} from "react";
 import style from '@/style/game/SnakeGame/SnakeGame.module.scss';
-import Snake from "@/pages/Snake";
 export default function SnakeGame(){
     //地圖 24*24
     //x and Y 對應 [x][y] 0 = 空 1 = 身體 2 = 頭 3 = 食物
@@ -22,7 +21,9 @@ export default function SnakeGame(){
     //蛇食物
     const [food,setFood] = useState<number[]>([-1,-1]);
     //空陣列 用於放食物(所以需要立刻更新)
-    const nullMap = useRef<number[][]> ( [ [] ] );
+    const nullMap = useRef<Array<[number,number]>> ( [ [0,0] ] );
+    //遊戲結束框 [是否結束,死因] 0 => 無 1 => 撞牆 2 => 咬自己
+    const [gameOver,setGameOver] = useState <[Boolean,number]>([false,0]);
     //初始化與放置地圖
     useEffect(()=>{
         GameMapReSet();
@@ -61,18 +62,41 @@ export default function SnakeGame(){
             setSnakeBody([ [13,12] ]);
             setSnakeTail([-1,-1]);
             snakeDirect.current = [-1,0];
+            const tempMap: Array<[number,number]> = [];
+            for(let col = 0 ; col < 24 ; col++){
+                for(let row = 0; row < 24 ; row++){
+                    if((col === 12 && row === 12) || (col === 13 && row === 12)) continue;
+                    tempMap.push([col,row]);
+                }
+            }
+            nullMap.current = tempMap;
             newFood();
             setSnakeMove([2,true]);
+
             window.addEventListener('keydown', handleKeyDown);
         }
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     },[gameStart])
-    //移動控制 x = col  y = row
+    //電腦進行移動控制 x = col  y = row
     const handleKeyDown = (event: KeyboardEvent) => {
         event.preventDefault();
-        switch (event.key) {
+        let keyString = event.key.toLowerCase();
+        let move = "";
+        if(keyString === "arrowup" || keyString === "w"){
+            move = "ArrowUp";
+        }else if(keyString === "arrowdown" || keyString === "s"){
+            move = "ArrowDown";
+        }else if(keyString === "arrowleft" || keyString === "a"){
+            move = "ArrowLeft";
+        }else if(keyString === "arrowright" || keyString === "d"){
+            move = "ArrowRight";
+        }else{
+            return;
+        }
+
+        switch (move) {
             case 'ArrowUp':
                 if(lastDirect.current[0] === 1 && lastDirect.current[1] === 0){
                     return;
@@ -99,6 +123,7 @@ export default function SnakeGame(){
                 break;
         }
     };
+    //
     //每次移動 重新設定頭 身體 尾巴 食物 並利用頭部去刷新interval
     useEffect(()=>{
         let runTime :ReturnType<typeof setTimeout>;
@@ -122,8 +147,8 @@ export default function SnakeGame(){
                 if(endBoolean !== 0){
                     setSnakeMove([0.5,false]);
                     setGameStart(false);
+                    setGameOver([true,endBoolean]);
                     clearInterval(runTime);
-                    alert(`遊戲結束 得分為${snakeBody.length-1}分 死因:${endBoolean===1?"撞到牆":"咬到自己"}`);
                     return;
                 }
                 //更新頭部位置
@@ -138,14 +163,6 @@ export default function SnakeGame(){
                         bodyIndex.unshift([col,row]);
                         return bodyIndex;
                     })
-                    // 刷新空陣列
-                    let tempMap :number[][] = [];
-                    for(let tempCol = 0 ; tempCol< 24; tempCol++){
-                        for(let tempRow = 0 ; tempRow < 24; tempRow++){
-                            tempMap.push([tempCol,tempRow]);
-                        }
-                    }
-                    
                     //找新食物
                     newFood();
                     //提升速度
@@ -170,6 +187,10 @@ export default function SnakeGame(){
                         bodyIndex.pop();
                         return bodyIndex;
                     })
+                    //刷新nullMap位置 先找到頭部 然後刪除 找到尾部 添加
+                    const findHead = nullMap.current.findIndex(([nullMapCol,nullMapRow])=>nullMapCol === newCol && nullMapRow === newRow);
+                    nullMap.current.splice(findHead,1);
+                    nullMap.current.push([tailCol,tailRow]);
                 }              
             }, (1000/snakeMove[0]) );
         }
@@ -177,17 +198,12 @@ export default function SnakeGame(){
     },[snakeMove,snakeHead])
     //設定新食物
     const newFood = () =>{
-        let find:Boolean = false;
-        while(find === false){
-            const col:number = Math.floor(Math.random()*24);
-            const row:number = Math.floor(Math.random()*24);
-            if(gameMap[col][row] === 0){
-                find = true;    
-            }
-            if(find === true){
-                setFood([col,row])
-            }
-        }
+        const nullMapNumber:number = Math.floor(Math.random() * nullMap.current.length)
+        const [col,row]:[number,number] = nullMap.current[nullMapNumber];
+        //放置食物
+        setFood([col,row]);
+        //清除食物的點
+        nullMap.current.splice(nullMapNumber,1);
     }
     //return 地圖
     const GameMapReSet = () =>{
@@ -213,8 +229,21 @@ export default function SnakeGame(){
 
     return(
         <div className={style.game}>
-            <GameMapReSet></GameMapReSet>
-            <button className={ `${style.gameStartButton} bg-sky-300 hover:bg-sky-500 hover:not-focus:bg-sky-400 ${gameStart===true?style.gameActive:""}`  } onClick={()=>{setGameStart(true)}}>遊戲開始</button>
+            
+            <div className={style.gameMenu}>
+                <div>當前速度:{`${snakeMove[0]}`}/s</div>
+                <div>得分:{`${snakeBody.length-1}`}</div>
+            </div>
+            <div className={style.GameMapDiv}>
+                <GameMapReSet></GameMapReSet>
+                <button className={ `${style.gameStartButton} bg-sky-300 hover:bg-sky-500 hover:not-focus:bg-sky-400 ${(gameStart===true || gameOver[0] === true)?style.gameActive:""}`  } onClick={()=>{setGameStart(true)}}>遊戲開始</button>
+                <div className={`${style.gameOverDiv} ${gameOver[0] === false? style.gameOverClose : ""} `}>
+                    <h2>遊戲結束</h2>
+                    <p>死因:{`${gameOver[1]===1?"撞到牆":"咬到自己"}`}</p>
+                    <p>最終得分:{`${snakeBody.length-1}`}</p>
+                    <button className={` bg-sky-300 hover:bg-sky-500 hover:not-focus:bg-sky-400`} onClick={()=>{setGameOver([false,0])}}>確認</button>
+                </div>
+            </div>
         </div>
     )
 };
